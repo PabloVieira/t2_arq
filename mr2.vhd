@@ -49,8 +49,8 @@ begin
 
 	----------------------------------------------------------------------------------------------------------
 	--- Trecho de codigo inserido para habilitar o CE dos periféricos e memória.
-	--- 	O ce(0) e da UART
-	--- 	O ce(16) e da memória de dados
+	--- 	O ce(0) é da UART
+	--- 	O ce(16) é da memória de dados
 	--- 	Os demais sao de periféricos de 1 a 15
 	--- Alem deste trecho foi inserido a mais na versao gold da MR2:
 	---		"APENAS" a codificao da instrucao ERET
