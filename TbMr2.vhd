@@ -153,7 +153,7 @@ architecture SisA of SisA is
 	signal external_data16: reg16;
 	signal external_data: reg32;
 
-	file ARQ: TEXT open READ_MODE is "start.txt";
+	file ARQ: TEXT open READ_MODE is "startA.txt";
 
 begin
 
@@ -312,7 +312,7 @@ architecture SisB of SisB is
 	signal external_data16: reg16;
 	signal external_data: reg32;
 
-	file ARQ: TEXT open READ_MODE is "start.txt";
+	file ARQ: TEXT open READ_MODE is "startB.txt";
 
 begin
 
