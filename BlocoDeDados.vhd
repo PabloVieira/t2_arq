@@ -23,7 +23,7 @@ end datapath;
 
 architecture datapath of datapath is
 
-	signal incpc, pc, npc, IR,  result, R1, R2, RS, RT, RIN,
+	signal incpc, pc, pc_salvo, npc, IR,  result, R1, R2, RS, RT, RIN,
 			ext16, cte_im, IMED, op1, op2, outalu, RALU, MDR,
 			mdr_int, dtpc: reg32 := (others =>  '0');
 	signal adD, adS: std_logic_vector(4 downto 0):= (others => '0');
@@ -45,12 +45,23 @@ begin
 	--==============================================================================
 	-- first_stage
 	--==============================================================================
-
+	
 	incpc <= pc + 4;
 	RNPC: entity work.regnbit generic map(N=>32) port map(ck=>ck, rst=>rst, ce=>uins.CY1, D=>incpc, Q=>npc);
 	RIR:  entity work.regnbit generic map(N=>32) port map(ck=>ck, rst=>rst, ce=>uins.CY1, D=>instruction, Q=>IR);
 	IR_OUT <= ir;	-- IR is the datapath output signal to carry the instruction
 	i_address <= pc;  -- connects PC output to the instruction memory address bus
+
+	tratamentoInt: process(intr, uins.i)
+	begin
+		if intr = '1' then
+			pc_salvo <= incpc;
+			incpc <= x"00400004";
+		end if;
+		if uins.i = ERET then
+			incpc <= pc_salvo;
+		end if;
+	end process tratamentoInt;
 
 	--==============================================================================
 	-- second stage

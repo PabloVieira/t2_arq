@@ -42,13 +42,13 @@ CPU_to_SisCom:
         la      $t2, StringMem
         la      $t0, EnderecoSisCom
 envia:  lb      $t1, 0($t2)
-        blez    $t1, segueE
+        blez    $t1, paraE
         sw      $t1, 4($t0)
         addi    $t2, $t2, 1        
-        j		envia				# jump to envia
+        j	envia				# jump to envia
         
 
-segueE:  lw $ra, 16($sp)
+paraE:  lw $ra, 16($sp)
         lw $t6, 12($sp)
         lw $t4, 8($sp)
         lw $t3, 4($sp)
@@ -67,13 +67,13 @@ SisCom_to_CPU:
        
         la      $t2, EnderecoSisCom
 recebe: lb      $t1, 8($t2)
-        blez    $t1, segueR
-        la      $t0, StringMem
+        blez    $t1, paraR
+        la      $t0, StrMemRecebida
         sw      $t1, 0($t0)
         addi    $t0, $t0, 1
-        j		recebe			# jump to recebe        
+        j	recebe			# jump to recebe        
 
-segueR: lw $ra, 16($sp)
+paraR:	lw $ra, 16($sp)
         lw $t6, 12($sp)
         lw $t4, 8($sp)
         lw $t3, 4($sp)
@@ -124,6 +124,7 @@ InterrupcaoDeFato:
 .data 0x10010000
 CiclosParaInterrupcaoSisCom:	.word 20
 StringMem:      .ascii  "Isto é um teste"
+StrMemRecebida:
 
 # ENDERE�O DO SISCOM
 ####################
