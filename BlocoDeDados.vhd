@@ -15,7 +15,9 @@ entity datapath is
 		d_address: out reg32;
 		data: inout reg32;
 		uins: in microinstruction;
-		IR_OUT:	out reg32
+		IR_OUT:	out reg32;
+		INTR: in std_logic;
+		INTA: out std_logic
 	);
 end datapath;
 

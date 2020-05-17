@@ -34,7 +34,9 @@ begin
 		i_address => i_address,
 		instruction => instruction,
 		d_address => data_address,
-		data => data
+		data => data,
+		INTR => intr,
+		inta => inta
 	);
 	ct: entity work.control_unit port map
 	(
