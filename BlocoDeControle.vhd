@@ -10,13 +10,15 @@ entity control_unit is
 	(
 		ck, rst: in std_logic;
 		uins: out microinstruction;
-		ir: in reg32
+		ir: in reg32;
+		INTR: in std_logic;
+		INTA: out std_logic
 	);
 end control_unit;
 
 architecture control_unit of control_unit is
 	type type_state is (Sidle, Sfetch, Sreg, Salu, Wbk, Sld, Sst, Salta);
-	signal em_andamento: std_logic;
+	signal em_andamento, EM_INT: std_logic;
 	signal EA, PE: type_state;
 	signal i: inst_type;
 begin
@@ -98,8 +100,18 @@ begin
 		case EA is
 			when Sidle => PE <= Sidle; -- reset being active, the processor do nothing!
 			-- first stage:  read the current instruction
-			when Sfetch => PE <= Sreg;
+			when Sfetch =>
+				PE <= Sreg;
 			-- second stage: read the register banck and store the mask (when i=stmsk)
+				if INTR='1' then
+					EM_INT <= '1';
+					uins.troca_pc <= '1';
+				end if;
+				if i=ERET then
+					uins.retorna_pc <= '1';
+					EM_INT <= '0';
+					uins.troca_pc <= '0';
+				end if;
 			when Sreg => PE <= Salu;
 			-- third stage: alu operation
 			when Salu  => if i=LW  or i=LBU then

@@ -34,16 +34,16 @@ begin
 		i_address => i_address,
 		instruction => instruction,
 		d_address => data_address,
-		data => data,
-		INTR => intr,
-		inta => inta
+		data => data
 	);
 	ct: entity work.control_unit port map
 	(
 		ck => clock,
 		rst => reset, 
 		IR => IR, 
-		uins => uins
+		uins => uins,
+		INTR => intr,
+		INTA => inta
 	);
 
 	rw <= uins.rw;

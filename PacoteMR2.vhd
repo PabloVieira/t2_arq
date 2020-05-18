@@ -26,6 +26,7 @@ package p_MR2 is
 		ceRW: std_logic;	-- Chip enable and R_W controls
 		rw: std_logic;
 		bw: std_logic;	-- Byte-word control (mem write only)
+		troca_pc, retorna_pc: std_logic;	
 		i: inst_type;	-- operation specification
 	end record;
 
