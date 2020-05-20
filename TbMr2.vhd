@@ -21,7 +21,7 @@ package aux_functions is
 	subtype reg8 is std_logic_vector(7 downto 0);
 	subtype reg4 is std_logic_vector(3 downto 0);
 
-	-- definição do tipo 'memory', que será utilizado para as memórias de dados/instruções
+	-- definiï¿½ï¿½o do tipo 'memory', que serï¿½ utilizado para as memï¿½rias de dados/instruï¿½ï¿½es
 	constant MEMORY_SIZE: integer:= 2048;
 	type memory is array (0 to MEMORY_SIZE) of reg8;
 	constant TAM_LINHA: integer:= 200;
@@ -88,7 +88,7 @@ architecture RAM_mem of RAM_mem is
 	alias low_address: reg16 is tmp_address(15 downto 0);	--  baixa para 16 bits devido ao CONV_INTEGER --
 begin
 
-	tmp_address <= address - START_ADDRESS;	--  offset do endereçamento  --
+	tmp_address <= address - START_ADDRESS;	--  offset do endereï¿½amento  --
 
 	-- writes in memory ASYNCHRONOUSLY  -- LITTLE ENDIAN -------------------
 	process(ce_n, we_n, low_address)
@@ -124,7 +124,7 @@ begin
 end RAM_mem;
 
 -------------------------------------------------------------------------
---  CPU PROCESSOR SIMULATION TESTBENCH
+--  SisA PROCESSOR SIMULATION TESTBENCH
 -------------------------------------------------------------------------
 library ieee;
 use IEEE.std_logic_1164.all;
@@ -132,10 +132,13 @@ use IEEE.std_logic_unsigned.all;
 use STD.TEXTIO.all;
 use work.aux_functions.all;
 
-entity CPU_tb is
-end CPU_tb;
+entity SisA is
+	ck, rst: in std_logic;
+	tx: out std_logic;
+	rs: in std_logic;
+end SisA;
 
-architecture CPU_tb of CPU_tb is
+architecture SisA of SisA is
 
 	signal Dadress, Ddata, Iadress, Idata,
 			i_cpu_address, d_cpu_address, data_cpu, tb_add, tb_data: reg32:= (others => '0');
@@ -150,7 +153,7 @@ architecture CPU_tb of CPU_tb is
 	signal external_data16: reg16;
 	signal external_data: reg32;
 
-	file ARQ: TEXT open READ_MODE is "start.txt";
+	file ARQ: TEXT open READ_MODE is "startA.txt";
 
 begin
 
@@ -176,7 +179,7 @@ begin
 
 	-- instructions memory signals --------------------------------------------------------
 	Ice_n   <= '0';
-	Ioe_n   <= '1' when rstCPU='1' else '0';			-- impede leitura enquanto está escrevendo
+	Ioe_n   <= '1' when rstCPU='1' else '0';			-- impede leitura enquanto estï¿½ escrevendo
 	Iwe_n   <= '0' when go_i='1'	else '1';			-- escrita durante a leitura do arquivo
 	Iadress <= tb_add  when rstCPU='1' else i_cpu_address;
 	Idata   <= tb_data when rstCPU='1' else (others => 'Z');
@@ -185,7 +188,7 @@ begin
 	-- this process loads the instruction memory and the data memory during reset
 	--
 	--
-	--	O PROCESSO ABAIXO É UMA PARSER PARA LER CÓDIGO GERADO PELO MARS NO
+	--	O PROCESSO ABAIXO ï¿½ UMA PARSER PARA LER Cï¿½DIGO GERADO PELO MARS NO
 	--	SEGUINTE FORMATO:
 	--
 	--		.CODE
@@ -214,7 +217,7 @@ begin
 
 		wait until rst = '1';
 
-		while NOT (endfile(ARQ)) loop	-- INÍCIO DA LEITURA DO ARQUIVO CONTENDO INSTRUÇÃO E DADOS -----
+		while NOT (endfile(ARQ)) loop	-- INï¿½CIO DA LEITURA DO ARQUIVO CONTENDO INSTRUï¿½ï¿½O E DADOS -----
 			readline(ARQ, ARQ_LINE);
 			read(ARQ_LINE, line_arq(1 to  ARQ_LINE'length));
 
@@ -222,10 +225,10 @@ begin
 			elsif line_arq(1 to 5)=".DATA" then code := false;						-- data
 			else
 				i := 1;								-- LEITORA DE LINHA - analizar o loop abaixo para compreender
-				address_flag := 0;					-- para INSTRUÇÃO é um para (end,inst)
+				address_flag := 0;					-- para INSTRUï¿½ï¿½O ï¿½ um para (end,inst)
 													-- para DADO aceita (end, dado 0, dado 1, dado 2 ....)
 				loop
-					if line_arq(i) = '0' and line_arq(i+1) = 'x' then	-- encontrou indicação de número hexa: '0x'
+					if line_arq(i) = '0' and line_arq(i+1) = 'x' then	-- encontrou indicaï¿½ï¿½o de nï¿½mero hexa: '0x'
 						i:= i + 2;
 						if address_flag=0 then
 							for w in 0 to 7 loop
@@ -246,15 +249,15 @@ begin
 							tb_add <= tb_add + 4;		-- *great!* consigo ler mais de uma word por linha!
 							go_i <= '0';
 							go_d <= '0';
-							address_flag:= 2;	-- sinaliza que já leu o conteúdo do endereço;
+							address_flag:= 2;	-- sinaliza que jï¿½ leu o conteï¿½do do endereï¿½o;
 						end if;
 					end if;
 					i:= i + 1;
-					-- sai da linha quando chegou no seu final OU já leu par(endereço, instrução) no caso de código
+					-- sai da linha quando chegou no seu final OU jï¿½ leu par(endereï¿½o, instruï¿½ï¿½o) no caso de cï¿½digo
 					exit when i=TAM_LINHA or (code=true and address_flag=2);
 				end loop;
 			end if;
-		end loop;								-- FINAL DA LEITURA DO ARQUIVO CONTENDO INSTRUÇÃO E DADOS -----
+		end loop;								-- FINAL DA LEITURA DO ARQUIVO CONTENDO INSTRUï¿½ï¿½O E DADOS -----
 		rstCPU <= '0';	-- release the processor to execute
 		wait for 2 ns;	-- To activate the RST CPU signal
 		wait until rst = '1';  -- to Hold again!
@@ -277,4 +280,163 @@ begin
 	---	Deve ser inserido um codigo que complementa a funcionalidade da UART
 	---------------------------------------------------------------------------------------
 
-end CPU_tb;
+end SisA;
+
+-------------------------------------------------------------------------
+--  SisB PROCESSOR SIMULATION TESTBENCH
+-------------------------------------------------------------------------
+library ieee;
+use IEEE.std_logic_1164.all;
+use IEEE.std_logic_unsigned.all;
+use STD.TEXTIO.all;
+use work.aux_functions.all;
+
+entity SisB is
+	ck, rst: in std_logic;
+	tx: out std_logic;
+	rs: int std_logic;
+end SisB;
+
+architecture SisB of SisB is
+
+	signal Dadress, Ddata, Iadress, Idata,
+			i_cpu_address, d_cpu_address, data_cpu, tb_add, tb_data: reg32:= (others => '0');
+	signal Dce_n, Dwe_n, Doe_n, Ice_n, Iwe_n, Ioe_n, ck, rst, rstCPU,
+			go_i, go_d, rw, bw: std_logic;
+	signal ce: std_logic_vector(16 downto 0);
+	signal intr, inta: std_logic;
+
+	signal stx: std_logic;
+	signal tx: std_logic_vector(3 downto 1);
+	signal tx_ack: std_logic_vector(3 downto 1);
+	signal external_data16: reg16;
+	signal external_data: reg32;
+
+	file ARQ: TEXT open READ_MODE is "startB.txt";
+
+begin
+
+	rst <= '1', '0' after 5 ns;		-- generates the reset signal
+
+	process						-- generates the clock signal
+	begin
+		ck <= '1', '0' after 5 ns;
+		wait for 10 ns;
+	end process;
+
+	Data_mem: entity work.RAM_mem generic map(START_ADDRESS => x"10010000") port map(ce_n => Dce_n, we_n => Dwe_n, oe_n => Doe_n, bw => bw, address => Dadress, data => Ddata);
+
+	Instr_mem: entity work.RAM_mem generic map(START_ADDRESS => x"00400000") port map(ce_n => Ice_n, we_n => Iwe_n, oe_n => Ioe_n, bw => '1', address => Iadress, data => Idata);
+
+	-- data memory signals --------------------------------------------------------
+	Dce_n    <= '0' when ce(16)='1' or go_d='1' else '1';
+	Doe_n    <= '0' when ce(16)='1' and rw='1' else '1';
+	Dwe_n    <= '0' when (ce(16)='1' and rw='0') or go_d='1' else '1';
+	Dadress  <= tb_add  when rstCPU='1' else d_cpu_address;
+	Ddata	 <= tb_data when rstCPU='1' else data_cpu when (ce(16)='1' and rw='0') else (others => 'Z');
+	data_cpu <= Ddata when ce(16)='1' and rw='1' else (others => 'Z');
+
+	-- instructions memory signals --------------------------------------------------------
+	Ice_n   <= '0';
+	Ioe_n   <= '1' when rstCPU='1' else '0';			-- impede leitura enquanto estï¿½ escrevendo
+	Iwe_n   <= '0' when go_i='1'	else '1';			-- escrita durante a leitura do arquivo
+	Iadress <= tb_add  when rstCPU='1' else i_cpu_address;
+	Idata   <= tb_data when rstCPU='1' else (others => 'Z');
+
+	----------------------------------------------------------------------------
+	-- this process loads the instruction memory and the data memory during reset
+	--
+	--
+	--	O PROCESSO ABAIXO ï¿½ UMA PARSER PARA LER Cï¿½DIGO GERADO PELO MARS NO
+	--	SEGUINTE FORMATO:
+	--
+	--		.CODE
+	--		0x00400000  0x08100022  j 0x00400088          7            j MyMain
+	--		0x00400004  0x3c010000  lui $1,0x0000         12           subu $sp, $sp, 4
+	--		0x00400008  0x34210004  ori $1,$1,0x0004           
+	--		0x0040000c  0x03a1e823  subu $29,$29,$1            
+	--		...
+	--		0x0040009c  0x01285021  addu $10,$9,$8        65           addu $t2, $t1, $t0
+	--		0x004000a0  0x08100025  j 0x00400094          66           j SaltoMyMain
+	--
+	--		.DATA
+	--		0x10010000	0x0000faaa  0x00000083  0x00000000  0x00000000
+	--
+	----------------------------------------------------------------------------
+	process
+		variable ARQ_LINE: LINE;
+		variable line_arq: string(1 to 200);
+		variable code	: boolean;
+		variable i, address_flag: integer;
+	begin
+		go_i <= '0';
+		go_d <= '0';
+		rstCPU <= '1';			-- hold the processor during file reading
+		code:=true;				-- default value of code is 1 (CODE)
+
+		wait until rst = '1';
+
+		while NOT (endfile(ARQ)) loop	-- INï¿½CIO DA LEITURA DO ARQUIVO CONTENDO INSTRUï¿½ï¿½O E DADOS -----
+			readline(ARQ, ARQ_LINE);
+			read(ARQ_LINE, line_arq(1 to  ARQ_LINE'length));
+
+			if line_arq(1 to 5)=".CODE" then code := true;							-- code
+			elsif line_arq(1 to 5)=".DATA" then code := false;						-- data
+			else
+				i := 1;								-- LEITORA DE LINHA - analizar o loop abaixo para compreender
+				address_flag := 0;					-- para INSTRUï¿½ï¿½O ï¿½ um para (end,inst)
+													-- para DADO aceita (end, dado 0, dado 1, dado 2 ....)
+				loop
+					if line_arq(i) = '0' and line_arq(i+1) = 'x' then	-- encontrou indicaï¿½ï¿½o de nï¿½mero hexa: '0x'
+						i:= i + 2;
+						if address_flag=0 then
+							for w in 0 to 7 loop
+								tb_add((31-w*4) downto (32-(w+1)*4))  <= CONV_VECTOR(line_arq,i+w);
+							end loop;
+							i:= i + 8;
+							address_flag:= 1;
+						else
+							for w in 0 to 7 loop
+								tb_data((31-w*4) downto (32-(w+1)*4))  <= CONV_VECTOR(line_arq,i+w);
+							end loop;
+							i:= i + 8;
+							wait for 0.1 ns;
+							if code=true then go_i <= '1';	-- the go_i signal enables instruction memory writing
+											else go_d <= '1';	-- the go_d signal enables data memory writing
+							end if;
+							wait for 0.1 ns;
+							tb_add <= tb_add + 4;		-- *great!* consigo ler mais de uma word por linha!
+							go_i <= '0';
+							go_d <= '0';
+							address_flag:= 2;	-- sinaliza que jï¿½ leu o conteï¿½do do endereï¿½o;
+						end if;
+					end if;
+					i:= i + 1;
+					-- sai da linha quando chegou no seu final OU jï¿½ leu par(endereï¿½o, instruï¿½ï¿½o) no caso de cï¿½digo
+					exit when i=TAM_LINHA or (code=true and address_flag=2);
+				end loop;
+			end if;
+		end loop;								-- FINAL DA LEITURA DO ARQUIVO CONTENDO INSTRUï¿½ï¿½O E DADOS -----
+		rstCPU <= '0';	-- release the processor to execute
+		wait for 2 ns;	-- To activate the RST CPU signal
+		wait until rst = '1';  -- to Hold again!
+	end process;
+
+	-- Port map dos subsitemas ------------------------------------------------------------
+	---------------------------------------------------------------------------------------
+	CPU: Entity work.MR2 port map
+		(clock => ck, reset => rstCPU, i_address => i_cpu_address, instruction => Idata,
+		ce => ce, rw => rw, bw => bw, d_address => d_cpu_address, data => data_cpu,
+		intr => intr, inta => inta);
+
+	C11: Entity work.UART port map
+			(rst => rst, ck => ck, ce => ce(0), rw => rw , inta => inta, intr => intr,
+			address => d_cpu_address, data => data_cpu
+			-- falta definir a interface com a outra UART (modelo assincrono) --
+			);
+
+	---------------------------------------------------------------------------------------
+	---	Deve ser inserido um codigo que complementa a funcionalidade da UART
+	---------------------------------------------------------------------------------------
+
+end SisB;

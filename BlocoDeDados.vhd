@@ -50,6 +50,17 @@ begin
 	IR_OUT <= ir;	-- IR is the datapath output signal to carry the instruction
 	i_address <= pc;  -- connects PC output to the instruction memory address bus
 
+	process(uins.troca_pc, uins.retorna_pc)
+	begin
+		if uins.troca_pc='1' then
+			pc_salvo <= incpc;
+			pc <= x"00400004";
+		end if;
+		if uins.retorna_pc='1' then
+			pc <= pc_salvo;
+		end if;
+	end process;
+
 	--==============================================================================
 	-- second stage
 	--==============================================================================
