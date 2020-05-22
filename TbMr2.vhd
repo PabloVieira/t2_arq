@@ -123,8 +123,41 @@ begin
 
 end RAM_mem;
 
+library ieee;
+use IEEE.std_logic_1164.all;
+use IEEE.std_logic_unsigned.all;
+
+entity Tb is
+end Tb;
+
+architecture Tb of Tb is	
+	signal ceA, ceB,rst, ckA, ckB, A2B, B2A: std_logic;
+	signal rwA, rwB, doneA, doneB, ackA, ackB: std_logic;
+	signal addA, addB: std_logic_vector (3 downto 0);
+	signal dataA, dataB: std_logic_vector( 7 downto 0);
+begin
+	rst <= '1', '0' after 10 ns;
+	process
+	begin
+		ck <= '1', '0' after 5 ns;
+		wait for 10 ns;
+	end process;
+
+	SisA: Entity work.SisA port map
+			(
+				rst => rst, clk => ck, TX =>A2B, rx => B2A
+			);
+
+	SisB: Entity work.SisB port map
+			(
+				rst => rst, clk => ck, TX =>B2A , rx => A2
+			);
+	
+
+end Tb;
+
 -------------------------------------------------------------------------
---  SisA PROCESSOR SIMULATION TESTBENCH
+--  SisA
 -------------------------------------------------------------------------
 library ieee;
 use IEEE.std_logic_1164.all;
@@ -283,7 +316,7 @@ begin
 end SisA;
 
 -------------------------------------------------------------------------
---  SisB PROCESSOR SIMULATION TESTBENCH
+--  SisB
 -------------------------------------------------------------------------
 library ieee;
 use IEEE.std_logic_1164.all;
