@@ -38,7 +38,7 @@
       <SelectedItems/>
       <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
       <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
-      <ViewHeaderState orientation="horizontal" >000000ff000000000000000100000000000000000100000000000000000000000000000000000001b0000000040101000100000000000000000000000064ffffffff000000810000000000000004000000ae0000000100000000000000290000000100000000000000750000000100000000000000640000000100000000</ViewHeaderState>
+      <ViewHeaderState orientation="horizontal" >000000ff0000000000000001000000000000000001000000000000000000000000000000000000055c000000040101000100000000000000000000000064ffffffff000000810000000000000004000000ae0000000100000000000000290000000100000000000000750000000100000000000004100000000100000000</ViewHeaderState>
       <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
       <CurrentItem>BancoRegistradores.vhd</CurrentItem>
    </ItemView>
@@ -58,7 +58,17 @@
       <ClosedNodes>
          <ClosedNodesVersion>2</ClosedNodesVersion>
          <ClosedNode>/CPU_tb - CPU_tb |home|vieira|Documents|arqii|t2_arq|TbMr2.vhd/CPU - MR2 - MR2</ClosedNode>
+         <ClosedNode>/MR2 - MR2 |home|vieira|Documents|arqii|t2_arq|mr2.vhd/dp - datapath - datapath</ClosedNode>
+         <ClosedNode>/SisA - SisA |home|vieira|Documents|arqii|t2_arq|SisA.vhd/CPU - MR2 - MR2</ClosedNode>
+         <ClosedNode>/SisA - SisA |home|vieira|Documents|arqii|t2_arq|SisA.vhd/SisCom - UART_SYNC_PARALLEL - main</ClosedNode>
+         <ClosedNode>/SisB - SisB |home|vieira|Documents|arqii|t2_arq|SisB.vhd/CPU - MR2 - MR2</ClosedNode>
+         <ClosedNode>/SisB - SisB |home|vieira|Documents|arqii|t2_arq|SisB.vhd/SisCom - UART_SYNC_PARALLEL - main</ClosedNode>
          <ClosedNode>/Tb - Tb |home|vieira|Documents|arqii|t2_arq|TbMr2.vhd/SisA - SisA - SisA/CPU - MR2 - MR2/dp - datapath - datapath</ClosedNode>
+         <ClosedNode>/UART_SYNC_PARALLEL - main |home|vieira|Documents|arqii|t2_arq|UART.vhd</ClosedNode>
+         <ClosedNode>/tb_t2 - behavior |home|vieira|Documents|arqii|t2_arq|tb_t2.vhd/SisA - SisA - SisA/C11 - UART_SYNC_PARALLEL - main</ClosedNode>
+         <ClosedNode>/tb_t2 - behavior |home|vieira|Documents|arqii|t2_arq|tb_t2.vhd/SisA - SisA - SisA/CPU - MR2 - MR2/dp - datapath - datapath</ClosedNode>
+         <ClosedNode>/tb_t2 - behavior |home|vieira|Documents|arqii|t2_arq|tb_t2.vhd/SisA - SisA - SisA/SisCom - UART_SYNC_PARALLEL - main</ClosedNode>
+         <ClosedNode>/tb_t2 - behavior |home|vieira|Documents|arqii|t2_arq|tb_t2.vhd/SisB - SisB - SisB</ClosedNode>
          <ClosedNode>PROJECT</ClosedNode>
       </ClosedNodes>
       <SelectedItems>
@@ -66,7 +76,7 @@
       </SelectedItems>
       <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
       <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
-      <ViewHeaderState orientation="horizontal" >000000ff000000000000000100000001000000000000000000000000000000000202000000010000000100000064000001d4000000020000000000000000000000000200000064ffffffff000000810000000300000002000001d40000000100000003000000000000000100000003</ViewHeaderState>
+      <ViewHeaderState orientation="horizontal" >000000ff000000000000000100000001000000000000000000000000000000000202000000010000000100000064000001bb000000020000000000000000000000000200000064ffffffff000000810000000300000002000001bb0000000100000003000000000000000100000003</ViewHeaderState>
       <UserChangedColumnWidths orientation="horizontal" >true</UserChangedColumnWidths>
       <CurrentItem>SisA - SisA - SisA (/home/vieira/Documents/arqii/t2_arq/SisA.vhd)</CurrentItem>
    </ItemView>
@@ -89,14 +99,41 @@
          <ClosedNodesVersion>1</ClosedNodesVersion>
       </ClosedNodes>
       <SelectedItems>
+         <SelectedItem>Simulate Behavioral Model</SelectedItem>
+      </SelectedItems>
+      <ScrollbarPosition orientation="vertical" >1</ScrollbarPosition>
+      <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
+      <ViewHeaderState orientation="horizontal" >000000ff00000000000000010000000100000000000000000000000000000000000000000000000125000000010000000100000000000000000000000064ffffffff000000810000000000000001000001250000000100000000</ViewHeaderState>
+      <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
+      <CurrentItem>Simulate Behavioral Model</CurrentItem>
+   </ItemView>
+   <SourceProcessView>000000ff0000000000000002000001260000007b01000000040100000002</SourceProcessView>
+   <CurrentView>Behavioral Simulation</CurrentView>
+   <ItemView engineview="BehavioralSim" guiview="Source" compilemode="ManualCompile" >
+      <ClosedNodes>
+         <ClosedNodesVersion>2</ClosedNodesVersion>
+         <ClosedNode>PROJECT</ClosedNode>
+      </ClosedNodes>
+      <SelectedItems>
+         <SelectedItem>SisB.vhd (/home/vieira/Documents/arqii/t2_arq/SisB.vhd)</SelectedItem>
+      </SelectedItems>
+      <ScrollbarPosition orientation="vertical" >5</ScrollbarPosition>
+      <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
+      <ViewHeaderState orientation="horizontal" >000000ff0000000000000001000000010000000000000000000000000000000000000000000000016b000000020000000000000000000000000000000064ffffffff000000810000000000000002000000e90000000100000000000000820000000100000000</ViewHeaderState>
+      <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
+      <CurrentItem>SisB.vhd (/home/vieira/Documents/arqii/t2_arq/SisB.vhd)</CurrentItem>
+   </ItemView>
+   <ItemView engineview="BehavioralSim" sourcetype="DESUT_VHDL_PACKAGE_BODY" guiview="Process" >
+      <ClosedNodes>
+         <ClosedNodesVersion>1</ClosedNodesVersion>
+      </ClosedNodes>
+      <SelectedItems>
          <SelectedItem></SelectedItem>
       </SelectedItems>
       <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
       <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
-      <ViewHeaderState orientation="horizontal" >000000ff00000000000000010000000100000000000000000000000000000000000000000000000196000000010000000100000000000000000000000064ffffffff000000810000000000000001000001960000000100000000</ViewHeaderState>
+      <ViewHeaderState orientation="horizontal" >000000ff00000000000000010000000100000000000000000000000000000000000000000000000135000000010000000100000000000000000000000064ffffffff000000810000000000000001000001350000000100000000</ViewHeaderState>
       <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
       <CurrentItem></CurrentItem>
    </ItemView>
-   <SourceProcessView>000000ff0000000000000002000001080000009901000000040100000002</SourceProcessView>
-   <CurrentView>Behavioral Simulation</CurrentView>
 </Project>

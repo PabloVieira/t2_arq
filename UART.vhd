@@ -95,7 +95,7 @@ use IEEE.STD_LOGIC_1164.all;
 entity RRI is
 	port(
             clk, rst        :   in  				   std_logic;
-            ce              :   in  				   std_logic;
+            --ce              :   in  				   std_logic;
             done            :   out 				   std_logic;
             ack             :   in  				   std_logic;
             send            :   out 				   std_logic;
@@ -106,14 +106,14 @@ end RRI;
 architecture main of RRI is  
     signal busy : std_logic := '0';
 begin
-    process(clk, rst,ce)
+    process(clk, rst)
     begin
         if (rst = '1') then
             done    <=        '0';
             send    <=        '0';
             busy    <=        '0';
         elsif clk'event and clk ='1' then
-            if ce = '1' OR busy= '1' then
+            if busy= '1' then
                 if ack ='0' and busy = '0' then
                     data_out    <=      data_in;
                     send        <=          '1';
@@ -124,8 +124,7 @@ begin
                     data_out <=   "ZZZZZZZZ";
                     busy     <=          '0';
                 end if;
-            end if;
-            if ce ='0' then
+            else
                 done <= '0';
             end if ;
         end if ;
@@ -176,6 +175,7 @@ end architecture;
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
+use work.aux_functions.all;
 
 entity UART_SYNC_PARALLEL is 
     port(
@@ -190,12 +190,12 @@ entity UART_SYNC_PARALLEL is
         ackIN           :       in     std_logic;
 				 
         RX              :       in     std_logic_vector(7 downto 0);
-        ceRX            :       in     std_logic;
+        --ceRX            :       in     std_logic;
         doneRX          :       out    std_logic;
 
-        add             :       in    std_logic_vector(3 downto 0);
+        add             :       in    reg32;
         
-		data            :       inout std_logic_vector(7 downto 0)
+		data            :       inout reg32
     );
 end entity UART_SYNC_PARALLEL;
 architecture main of UART_SYNC_PARALLEL is 
@@ -232,13 +232,13 @@ architecture main of UART_SYNC_PARALLEL is
 begin
                         
     -- CHIP ENABLE
-    ce_rw     <= '1' when (add="0100")  and (rw ='1') and (ce='1')       else '0';
-    ce_rr     <= '1' when (add="1000")  and (rw ='0') and (ce='1')       else '0';
-	ce_base   <= '1' when (add="0000")  and (ce='1')  and (INTR_AUX='1') else '0';
+    ce_rw     <= '1' when (add=x"00000100")  and (rw ='1') and (ce='1')       else '0';
+    ce_rr     <= '1' when (add=x"00001000")  and (rw ='0') and (ce='1')       else '0';
+	ce_base   <= '1' when (add=x"00000000")  and (ce='1')  and (INTR_AUX='1') else '0';
    
 
     -- CONTROLE DA PORTA DATA:
-    data <= data_outRR when ce_rr ='1' else reg_base when ce_base='1' else "ZZZZZZZZ";
+    data <= x"000000" & data_outRR when ce_rr ='1' else x"000000" & reg_base when ce_base='1'; --else "ZZZZZZZZ";
     
     -- CONTROLE DE INTERRUPO:
     INTR_AUX <= INTR_RR OR INTR_RW;
@@ -274,7 +274,7 @@ begin
         clk         =>      clk,
         rst         =>      rst,
         ce          =>      ce_rw,
-        data_in     =>      data,
+        data_in     =>      data(7 downto 0),
         data_out    =>      data2RWO,
         done        =>      INTR_RW,
         send        =>      ce_rwo,
@@ -296,7 +296,7 @@ begin
     RRI_UART: entity work.RRI port map(
         clk         =>      clk,
         rst         =>      rst,
-        ce          =>      ceRX,
+--        ce          =>      ceRX,
         data_in     =>      RX,
         data_out    =>      data2RR,
         done        =>      doneRX,

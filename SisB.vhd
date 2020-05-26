@@ -210,8 +210,4 @@ begin
 			add => d_cpu_address, data => data_cpu, ackIN => ack, RX => RX
 			);
 
-	---------------------------------------------------------------------------------------
-	---	Deve ser inserido um codigo que complementa a funcionalidade da UART
-	---------------------------------------------------------------------------------------
-
 end SisB;

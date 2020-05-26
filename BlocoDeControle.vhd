@@ -103,15 +103,15 @@ begin
 			when Sfetch =>
 				PE <= Sreg;
 			-- second stage: read the register banck and store the mask (when i=stmsk)
-				if INTR='1' then
-					EM_INT <= '1';
-					uins.troca_pc <= '1';
-				end if;
-				if i=ERET then
-					uins.retorna_pc <= '1';
-					EM_INT <= '0';
-					uins.troca_pc <= '0';
-				end if;
+--				if INTR='1' then
+--					EM_INT <= '1';
+--					uins.troca_pc <= '1';
+--				end if;
+--				if i=ERET then
+--					uins.retorna_pc <= '1';
+--					EM_INT <= '0';
+--					uins.troca_pc <= '0';
+--				end if;
 			when Sreg => PE <= Salu;
 			-- third stage: alu operation
 			when Salu  => if i=LW  or i=LBU then
