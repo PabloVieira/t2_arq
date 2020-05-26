@@ -180,14 +180,14 @@ use IEEE.STD_LOGIC_1164.all;
 entity UART_SYNC_PARALLEL is 
     port(
         clk, rst        :       in     std_logic;
-		rw, ce          :       in     std_logic; 
+		  rw, ce          :       in     std_logic; 
 
         INTA            :       in     std_logic;
         INTR            :       out    std_logic;
 		
         TX              :       out    std_logic_vector(7 downto 0);
-        sendTx          :       out    std_logic;
-        ackTX           :       in     std_logic;
+        sendOUT          :       out    std_logic;
+        ackIN           :       in     std_logic;
 				 
         RX              :       in     std_logic_vector(7 downto 0);
         ceRX            :       in     std_logic;
@@ -240,7 +240,7 @@ begin
     -- CONTROLE DA PORTA DATA:
     data <= data_outRR when ce_rr ='1' else reg_base when ce_base='1' else "ZZZZZZZZ";
     
-    -- CONTROLE DE INTERRUPÇÃO:
+    -- CONTROLE DE INTERRUPO:
     INTR_AUX <= INTR_RR OR INTR_RW;
     INTR <= INTR_AUX and int_busy;
     
@@ -289,8 +289,8 @@ begin
         data_in     =>      data2RWO,
         data_out    =>      TX,
         done        =>      doneRWO,
-        send        =>      sendTX,
-        ack         =>      ackTX
+        send        =>      sendOUT,
+        ack         =>      ackIN
     );
 
     RRI_UART: entity work.RRI port map(

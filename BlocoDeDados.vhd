@@ -21,7 +21,7 @@ end datapath;
 
 architecture datapath of datapath is
 
-	signal incpc, pc, npc, IR,  result, R1, R2, RS, RT, RIN,
+	signal incpc, pc, pc_salvo, npc, IR,  result, R1, R2, RS, RT, RIN,
 			ext16, cte_im, IMED, op1, op2, outalu, RALU, MDR,
 			mdr_int, dtpc: reg32 := (others =>  '0');
 	signal adD, adS: std_logic_vector(4 downto 0):= (others => '0');

@@ -60,68 +60,7 @@ package body aux_functions is
 	end CONV_VECTOR;
 
 end aux_functions;
-
---------------------------------------------------------------------------
--- Module implementing a behavioral model of an ASYNCHRONOUS INTERFACE RAM
---------------------------------------------------------------------------
-library IEEE;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_UNSIGNED.all;
-use work.aux_functions.all;
-
-entity RAM_mem is
-	generic
-	(
-		START_ADDRESS: reg32:= (others => '0')
-	);
-	port
-	(
-		ce_n, we_n, oe_n, bw: in std_logic;
-		address: in reg32;
-		data: inout reg32
-	);
-end RAM_mem;
-
-architecture RAM_mem of RAM_mem is
-	signal RAM: memory;
-	signal tmp_address: reg32;
-	alias low_address: reg16 is tmp_address(15 downto 0);	--  baixa para 16 bits devido ao CONV_INTEGER --
-begin
-
-	tmp_address <= address - START_ADDRESS;	--  offset do endereamento  --
-
-	-- writes in memory ASYNCHRONOUSLY  -- LITTLE ENDIAN -------------------
-	process(ce_n, we_n, low_address)
-	begin
-		if ce_n='0' and we_n='0' then
-			if CONV_INTEGER(low_address)>=0 and CONV_INTEGER(low_address+3) <= MEMORY_SIZE then
-				if bw='1' then
-					RAM(CONV_INTEGER(low_address+3)) <= data(31 downto 24);
-					RAM(CONV_INTEGER(low_address+2)) <= data(23 downto 16);
-					RAM(CONV_INTEGER(low_address+1)) <= data(15 downto  8);
-				end if;
-				RAM(CONV_INTEGER(low_address )) <= data(7 downto  0);
-			end if;
-		end if;
-	end process;
-
-	-- read from memory
-	process(ce_n, oe_n, low_address)
-	begin
-		if ce_n='0' and oe_n='0' and CONV_INTEGER(low_address)>=0 and CONV_INTEGER(low_address+3) <= MEMORY_SIZE then
-			data(31 downto 24) <= RAM(CONV_INTEGER(low_address+3));
-			data(23 downto 16) <= RAM(CONV_INTEGER(low_address+2));
-			data(15 downto  8) <= RAM(CONV_INTEGER(low_address+1));
-			data(7 downto  0) <= RAM(CONV_INTEGER(low_address ));
-		else
-			data(31 downto 24) <= (others => 'Z');
-			data(23 downto 16) <= (others => 'Z');
-			data(15 downto  8) <= (others => 'Z');
-			data(7 downto  0) <= (others => 'Z');
-		end if;
-	end process;
-
-end RAM_mem;	
+	
 
 library ieee;
 use IEEE.std_logic_1164.all;
@@ -129,7 +68,7 @@ use IEEE.std_logic_unsigned.all;
 use STD.TEXTIO.all;
 use work.aux_functions.all;
 
-entity SisA is
+entity SisB is
 	port(
 		ck: in std_logic;
 		rst: in std_logic;
@@ -137,37 +76,29 @@ entity SisA is
 		send: out std_logic;
 		ack: in std_logic;
 		ackOUT: out std_logic;
-		RX: out reg8;
-		TX: in reg8
+		RX: in reg8;
+		TX: out reg8
 	);
-end SisA;
+end SisB;
 
-architecture SisA of SisA is
+architecture SisB of SisB is
 
 	signal Dadress, Ddata, Iadress, Idata,
 			i_cpu_address, d_cpu_address, data_cpu, tb_add, tb_data: reg32:= (others => '0');
-	signal Dce_n, Dwe_n, Doe_n, Ice_n, Iwe_n, Ioe_n, ck, rst, rstCPU,
+	signal Dce_n, Dwe_n, Doe_n, Ice_n, Iwe_n, Ioe_n, rstCPU,
 			go_i, go_d, rw, bw: std_logic;
 	signal ce: std_logic_vector(16 downto 0);
 	signal intr, inta: std_logic;
 
 	signal stx: std_logic;
-	signal tx: std_logic_vector(3 downto 1);
+
 	signal tx_ack: std_logic_vector(3 downto 1);
 	signal external_data16: reg16;
 	signal external_data: reg32;
 
-	file ARQ: TEXT open READ_MODE is "startA.txt";
+	file ARQ: TEXT open READ_MODE is "startB.txt";
 
 begin
-
-	rst <= '1', '0' after 5 ns;		-- generates the reset signal
-
-	process						-- generates the clock signal
-	begin
-		ck <= '1', '0' after 5 ns;
-		wait for 10 ns;
-	end process;
 
 	Data_mem: entity work.RAM_mem generic map(START_ADDRESS => x"10010000") port map(ce_n => Dce_n, we_n => Dwe_n, oe_n => Doe_n, bw => bw, address => Dadress, data => Ddata);
 
@@ -274,14 +205,13 @@ begin
 		ce => ce, rw => rw, bw => bw, d_address => d_cpu_address, data => data_cpu,
 		intr => intr, inta => inta);
 
-	C11: Entity work.UART_SYNC_PARALLEL port map
-			(rst => rst, ck => ck, ce => ce(0), rw => rw , inta => inta, intr => intr,
-			address => d_cpu_address, data => data_cpu
-			-- falta definir a interface com a outra UART (modelo assincrono) --
+	SisCom: Entity work.UART_SYNC_PARALLEL port map
+			(rst => rst, clk => ck, ce => ce(0), rw => rw , inta => inta, intr => intr,
+			add => d_cpu_address, data => data_cpu, ackIN => ack, RX => RX
 			);
 
 	---------------------------------------------------------------------------------------
 	---	Deve ser inserido um codigo que complementa a funcionalidade da UART
 	---------------------------------------------------------------------------------------
 
-end SisA;
+end SisB;
